@@ -1,0 +1,39 @@
+## --- Артефакты сборки и компиляции ---
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+build/
+bin/
+obj/
+
+## --- Результаты тестирования ---
+TestResults/
+*.trx
+*.vstest
+
+## --- Файлы настроек Visual Studio ---
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## --- Логи и временные файлы ---
+*.log
+*.tmp
+*.vshost.exe
+*.vshost.exe.config
+*.manifest
+*.bak
+
+## --- Зависимости (если используете пакеты в старом формате) ---
+**/packages/*
+!**/packages/repositories.config
+
+## --- Файлы пользовательской среды (секреты) ---
+.env
+.env.*
+appsettings.Development.json

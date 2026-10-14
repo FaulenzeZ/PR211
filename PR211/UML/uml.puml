@@ -1,0 +1,99 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' ===== Модели =====
+abstract class VehiclePass {
+    + DateTime Data
+    + string CarNumber
+    + {abstract} string Describe()
+}
+
+class Fixation {
+    + override string Describe()
+}
+
+class TruckPass {
+    + double CargoWeight
+    + string CargoType
+    + override string Describe()
+}
+
+class CarPass {
+    + int Passengers
+    + string Brand
+    + override string Describe()
+}
+
+VehiclePass <|-- Fixation
+VehiclePass <|-- TruckPass
+VehiclePass <|-- CarPass
+
+' ===== Интерфейсы =====
+interface IPassParser {
+    + VehiclePass? ParseLine(string line)
+}
+
+interface IPassRepository {
+    + List<VehiclePass> LoadFromFile(string path)
+    + List<VehiclePass> LoadFromLines(string[] lines)
+    + IReadOnlyList<string> Errors
+}
+
+interface IPassPrinter {
+    + void Print(VehiclePass pass)
+    + void PrintAll(List<VehiclePass> passes)
+}
+
+' ===== Реализации =====
+class PassParser {
+    - string[] SplitFields(string line)
+    - void RequireFields(string[] parts, int min, string type)
+    - DateTime ParseDate(string s)
+    - int ParseInt(string s)
+    - double ParseDouble(string s)
+    - string ParseNumber(string s)
+}
+
+class PassRepository {
+    - IPassParser _parser
+    - List<string> _errors
+    + PassRepository(IPassParser parser)
+    - void TryParseLine(string line, List<VehiclePass> result)
+}
+
+class PassPrinter {
+    + void Print(VehiclePass pass)
+    + void PrintAll(List<VehiclePass> passes)
+}
+
+IPassParser <|.. PassParser
+IPassRepository <|.. PassRepository
+IPassPrinter <|.. PassPrinter
+
+' ===== Исключение =====
+class PassParseException {
+    + PassParseException(string message)
+    + PassParseException(string message, Exception inner)
+}
+
+Exception <|-- PassParseException
+
+' ===== Зависимости =====
+PassRepository --> IPassParser : uses
+PassParser ..> PassParseException : throws
+PassRepository ..> PassParseException : catches
+PassRepository --> VehiclePass : creates
+PassParser --> VehiclePass : creates
+
+' ===== Program =====
+class Program {
+    + {static} void Main()
+    - {static} void PrintErrors(IReadOnlyList<string> errors)
+}
+
+Program --> IPassParser : creates
+Program --> IPassRepository : creates
+Program --> IPassPrinter : creates
+
+@enduml

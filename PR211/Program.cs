@@ -1,29 +1,19 @@
-﻿using System.Globalization;
+﻿using System.Data;
+using System.Diagnostics;
+using System.Globalization;
 
 class Received_good
 {
-    private string _name = string.Empty;
     //private string? _name;        // Допускает возможность свойтво быть null
     //public required string Name { get; set; }     // Модифмкатор required обязывать заполнить свойтво при создании экземпляра
-    private int _quantity;
 
+    private string _name = string.Empty;
     public string Name
     {
         get {  return _name; }
-        set
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                _name = value;
-            }
-        }
+        set { if (!string.IsNullOrEmpty(value)) _name = value;}
     }
-    public int Quantity
-    {
-        get { return _quantity; }
-        set { _quantity = value; }
-    }
-  
+    public int Quantity {get; set;}  
     public DateTime DeliveryTime { get; set; }
 
 }
@@ -33,16 +23,16 @@ class main
     static void Main()
     {
         Received_good one = new Received_good();
-        one.Name = "Рамен";
-        one.Quantity = 100;
-        one.DeliveryTime = new DateTime(2026, 4, 01);
-        one.DeliveryTime = DateTime.Now;
+        Console.Write("Введите название товара: ");
+        string good_name = Console.ReadLine() ?? "";
+        one.Name = good_name;
+        Console.Write("Введите количество товара: ");
+        int q = Convert.ToInt32(Console.ReadLine());
+        one.Quantity = q;
+        Console.Write("Введите дату прихода товара: ");
+        string data_time = Console.ReadLine();
+        one.DeliveryTime = DateTime.ParseExact(data_time, "yyyy.MM.dd", CultureInfo.InvariantCulture);
 
-        Console.WriteLine(one.Name);
-        Console.WriteLine(one.Quantity);
-        Console.WriteLine(one.DeliveryTime);
-
-
+        Console.WriteLine($" Название: {one.Name}, Кол-во: {one.Quantity}, Дата прихода: {one.DeliveryTime}");
     }
-
 }

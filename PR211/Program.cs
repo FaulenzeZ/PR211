@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using PR211.Models;
 using PR211.Output;
+using PR211.Parsing;
 using PR211.Storage;
 
 namespace PR211
@@ -11,20 +11,35 @@ namespace PR211
     {
         static void Main()
         {
-            Console.WriteLine("Введите имя файла с данными (например, input.txt):");
+            Console.WriteLine("Введите имя файла (например, input.txt):");
             string fileName = Console.ReadLine() ?? "";
 
-            if (!File.Exists(fileName))
+            try
             {
-                Console.WriteLine("Файл не найден.");
-                return;
+                var parser = new PassParser();
+                var repository = new PassRepository(parser);
+                List<VehiclePass> passes = repository.LoadFromFile(fileName);
+
+                var printer = new PassPrinter();
+                printer.PrintAll(passes);
+
+                PrintErrors(repository.Errors);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
 
-            var repository = new PassRepository();
-            List<VehiclePass> passes = repository.LoadFromFile(fileName);
+        static void PrintErrors(IReadOnlyList<string> errors)
+        {
+            if (errors.Count == 0)
+                return;
 
-            var printer = new PassPrinter();
-            printer.PrintAll(passes);
+            Console.WriteLine();
+            Console.WriteLine($"Ошибок при разборе: {errors.Count}");
+            foreach (string e in errors)
+                Console.WriteLine($"  • {e}");
         }
     }
 }

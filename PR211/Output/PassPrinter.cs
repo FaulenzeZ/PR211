@@ -4,7 +4,7 @@ using PR211.Models;
 
 namespace PR211.Output
 {
-    public class PassPrinter
+    public class PassPrinter : IPassPrinter
     {
         public void Print(VehiclePass pass)
         {

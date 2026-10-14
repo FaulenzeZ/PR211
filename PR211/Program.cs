@@ -1,38 +1,32 @@
 ﻿using System.Data;
-using System.Diagnostics;
 using System.Globalization;
 
-class Received_good
+class Fixation
 {
-    //private string? _name;        // Допускает возможность свойтво быть null
-    //public required string Name { get; set; }     // Модифмкатор required обязывать заполнить свойтво при создании экземпляра
-
-    private string _name = string.Empty;
-    public string Name
-    {
-        get {  return _name; }
-        set { if (!string.IsNullOrEmpty(value)) _name = value;}
-    }
-    public int Quantity {get; set;}  
-    public DateTime DeliveryTime { get; set; }
-
+    public DateTime Data {get; set;}
+    public string CarNumber {get; set;} = string.Empty;
 }
-
-class main
+class Programm 
 {
     static void Main()
     {
-        Received_good one = new Received_good();
-        Console.Write("Введите название товара: ");
-        string good_name = Console.ReadLine() ?? "";
-        one.Name = good_name;
-        Console.Write("Введите количество товара: ");
-        int q = Convert.ToInt32(Console.ReadLine());
-        one.Quantity = q;
-        Console.Write("Введите дату прихода товара: ");
-        string data_time = Console.ReadLine();
-        one.DeliveryTime = DateTime.ParseExact(data_time, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+        Fixation avto_fix = new Fixation();
 
-        Console.WriteLine($" Название: {one.Name}, Кол-во: {one.Quantity}, Дата прихода: {one.DeliveryTime}");
+        Console.WriteLine("Введите описание объекта (например: Фиксация проезда автомобилей: 2026.10.26 \"АН508А124\")");
+        string line = Console.ReadLine() ?? "";
+
+        int colon = line.IndexOf(':');
+        if (colon >= 0)
+            line = line.Substring(colon + 1);
+
+        string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        string data = parts[0];
+        string car = parts[1].Trim('"');
+
+        avto_fix.Data = DateTime.ParseExact(data, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+        avto_fix.CarNumber = car;
+        Console.WriteLine($"Время: {avto_fix.Data}, Номер: {avto_fix.CarNumber}");
     }
+    
 }

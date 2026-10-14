@@ -1,12 +1,44 @@
 ﻿using System.Data;
 using System.Globalization;
 
-class Fixation
+abstract class VehiclePass
 {
-    public DateTime Data {get; set;}
-    public string CarNumber {get; set;} = string.Empty;
+    public DateTime Data { get; set; }
+    public string CarNumber { get; set; } = string.Empty;
+    public abstract string Describe();
 }
-class Programm 
+class Fixation : VehiclePass
+{
+    public override string Describe()
+    {
+        return $"Фиксация: {Data:yyyy.MM.dd}, номер: {CarNumber}";
+    }
+}
+
+class TruckPass : VehiclePass
+{
+    public double CargoWeight { get; set; }
+    public string CargoType { get; set; } = string.Empty;
+    public override string Describe()
+    {
+        return $"Грузовик: {Data:yyyy.MM.dd}, номер {CarNumber}, " +
+        $"груз {CargoWeight}т., тип {CargoType}";
+    }
+}
+
+class CarPass : VehiclePass
+{
+    public int Passengers { get; set; }
+    public string Brand { get; set; } = string.Empty;
+
+    public override string Describe()
+    {
+        return $"Легковой: {Data:yyyy.MM.dd}, номер {CarNumber}, " +
+        $"пассажиров {Passengers}, марка {Brand}";
+    }
+}
+
+class Programm
 {
     static void Main()
     {
@@ -28,5 +60,5 @@ class Programm
         avto_fix.CarNumber = car;
         Console.WriteLine($"Время: {avto_fix.Data}, Номер: {avto_fix.CarNumber}");
     }
-    
+
 }

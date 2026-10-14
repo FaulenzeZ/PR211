@@ -13,7 +13,7 @@ obj/
 TestResults/
 *.trx
 *.vstest
-
+coveragereport/
 ## --- Файлы настроек Visual Studio ---
 .vs/
 *.suo

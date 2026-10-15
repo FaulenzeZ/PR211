@@ -1,32 +1,30 @@
-﻿using System.Data;
-using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using PR211.Models;
+using PR211.Output;
+using PR211.Storage;
 
-class Fixation
+namespace PR211
 {
-    public DateTime Data {get; set;}
-    public string CarNumber {get; set;} = string.Empty;
-}
-class Programm 
-{
-    static void Main()
+    class Program
     {
-        Fixation avto_fix = new Fixation();
+        static void Main()
+        {
+            Console.WriteLine("Введите имя файла с данными (например, input.txt):");
+            string fileName = Console.ReadLine() ?? "";
 
-        Console.WriteLine("Введите описание объекта (например: Фиксация проезда автомобилей: 2026.10.26 \"АН508А124\")");
-        string line = Console.ReadLine() ?? "";
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine("Файл не найден.");
+                return;
+            }
 
-        int colon = line.IndexOf(':');
-        if (colon >= 0)
-            line = line.Substring(colon + 1);
+            var repository = new PassRepository();
+            List<VehiclePass> passes = repository.LoadFromFile(fileName);
 
-        string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-        string data = parts[0];
-        string car = parts[1].Trim('"');
-
-        avto_fix.Data = DateTime.ParseExact(data, "yyyy.MM.dd", CultureInfo.InvariantCulture);
-        avto_fix.CarNumber = car;
-        Console.WriteLine($"Время: {avto_fix.Data}, Номер: {avto_fix.CarNumber}");
+            var printer = new PassPrinter();
+            printer.PrintAll(passes);
+        }
     }
-    
 }
